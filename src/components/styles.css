@@ -1,0 +1,16 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  display: flex;
+  gap:150px;
+}
+
+.App .moveable li {
+  cursor: move;
+}
+
+ol.square {
+  min-width: 200px;
+  min-height: 30px;
+  background-color: #e7e7e7;
+}
