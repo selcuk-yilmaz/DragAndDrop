@@ -1,13 +1,13 @@
 // import logo from './logo.svg';
-import './App.css';
-import QuoteApp from './components/QuoteApp';
+import "./App.css";
+import QuoteApp from "./components/QuoteApp";
 // import  DragAndDrop from "./components/DragDrop"
 
 function App() {
   return (
     <div className="App">
-{/* <DragAndDrop /> */}
-<QuoteApp/>
+      {/* <DragAndDrop /> */}
+      <QuoteApp />
     </div>
   );
 }

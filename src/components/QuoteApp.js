@@ -110,7 +110,7 @@ function QuoteApp() {
       >
         Add new item
       </button>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex",gap:"50px" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
             <Droppable key={ind} droppableId={`${ind}`}>
