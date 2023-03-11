@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import axios from "axios";
 
-// fake data generator
 const getItems = (count, offset = 0) =>
   Array.from({ length: count }, (v, k) => k).map((k) => ({
     id: `item-${k + offset}-${new Date().getTime()}`,
@@ -19,12 +19,7 @@ const reorder = (list, startIndex, endIndex) => {
 /**
  * Moves an item from one list to another list.
  */
-const move = (
-  source,
-  destination,
-  droppableSource,
-  droppableDestination
-) => {
+const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const [removed] = sourceClone.splice(droppableSource.index, 1);
@@ -37,7 +32,6 @@ const move = (
 
   return result;
 };
-
 const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
@@ -52,15 +46,19 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   // styles we need to apply on draggables
   ...draggableStyle,
 });
-
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
   padding: grid,
   width: 250,
 });
-
+//! function component start from here
 function QuoteApp() {
   const [state, setState] = useState([getItems(10), getItems(5, 10)]);
+  //!start functi
+  useEffect(() => {
+    // getDuties();
+    // getTasks();
+  }, []);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -92,6 +90,31 @@ function QuoteApp() {
       setState(newState.filter((group) => group.length));
     }
   }
+    //!get image as a ..... from API
+  // const getDuties = async () => {
+  //   try {
+  //     const response = await fetch(hostName + "/api/v1/ros/actions");
+  //     const data = await response.json();
+  //     // console.log(data.data.Actions);
+  //     setGetAllDuties(data.data.Actions);
+  //     abc = data;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  function getTasks() {
+    axios
+      .get("http://127.0.0.1:5050/api/v1/ros/actions")
+      .then((res) => {
+        // abc = res.data.data.Actions;
+        // console.log(abc);
+        setState(res.data.data.Actions);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  //-------------------------------------------------------
   return (
     <div>
       <button
@@ -99,6 +122,7 @@ function QuoteApp() {
         onClick={() => {
           setState([...state, []]);
         }}
+        style={{ width: "200px", height: "70px",background:"yellowgreen" }}
       >
         Add new group
       </button>
@@ -107,10 +131,11 @@ function QuoteApp() {
         onClick={() => {
           setState([...state, getItems(1)]);
         }}
+        style={{ width: "200px", height: "70px",background:"yellow"  }}
       >
         Add new item
       </button>
-      <div style={{ display: "flex",gap:"50px" }}>
+      <div style={{ display: "flex", gap: "50px" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
             <Droppable key={ind} droppableId={`${ind}`}>
@@ -121,11 +146,7 @@ function QuoteApp() {
                   {...provided.droppableProps}
                 >
                   {el.map((item, index) => (
-                    <Draggable
-                      key={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    >
+                    <Draggable key={item.id} draggableId={item.id} index={index}>
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
@@ -139,7 +160,7 @@ function QuoteApp() {
                           <div
                             style={{
                               display: "flex",
-                              justifyContent: "space-around"
+                              justifyContent: "space-around",
                             }}
                           >
                             {item.content}
@@ -147,9 +168,9 @@ function QuoteApp() {
                               type="button"
                               onClick={() => {
                                 const newState = [...state];
-                                newState[ind].splice(index, 1);
+                                newState[index].splice(index, 1);
                                 setState(
-                                  newState.filter(group => group.length)
+                                  newState.filter((group) => group.length)
                                 );
                               }}
                             >

@@ -69,7 +69,7 @@ root.render(
 //   padding: grid,
 //   width: 250,
 // });
-
+//! COMPONENT START HERE
 // function QuoteApp() {
 //   const [state, setState] = useState([getItems(10), getItems(5, 10)]);
 
