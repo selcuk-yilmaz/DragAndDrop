@@ -1,8 +1,6 @@
 .App {
   font-family: sans-serif;
   text-align: center;
-  display: flex;
-  gap:150px;
 }
 
 .App .moveable li {

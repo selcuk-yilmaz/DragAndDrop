@@ -4,8 +4,8 @@ import axios from "axios";
 
 const getItems = (count, offset = 0) =>
   Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k + offset}-${new Date().getTime()}`,
-    content: `item ${k + offset}`,
+    _id: `action-${k + offset}-${new Date().getTime()}`,
+    name: `action-${k + offset}`,
   }));
 
 const reorder = (list, startIndex, endIndex) => {
@@ -49,14 +49,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
   padding: grid,
-  width: 250,
+  width: "50%",
 });
 //! function component start from here
 function QuoteApp() {
   const [state, setState] = useState([getItems(10), getItems(5, 10)]);
   //!start functi
   useEffect(() => {
-    // getDuties();
     // getTasks();
   }, []);
 
@@ -91,17 +90,6 @@ function QuoteApp() {
     }
   }
     //!get image as a ..... from API
-  // const getDuties = async () => {
-  //   try {
-  //     const response = await fetch(hostName + "/api/v1/ros/actions");
-  //     const data = await response.json();
-  //     // console.log(data.data.Actions);
-  //     setGetAllDuties(data.data.Actions);
-  //     abc = data;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
   function getTasks() {
     axios
       .get("http://127.0.0.1:5050/api/v1/ros/actions")
@@ -115,26 +103,39 @@ function QuoteApp() {
       });
   }
   //-------------------------------------------------------
+  console.log(state);
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => {
-          setState([...state, []]);
-        }}
-        style={{ width: "200px", height: "70px",background:"yellowgreen" }}
-      >
-        Add new group
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          setState([...state, getItems(1)]);
-        }}
-        style={{ width: "200px", height: "70px",background:"yellow"  }}
-      >
-        Add new item
-      </button>
+      <div style={{ display: "flex", gap: "55px" }}>
+        <button
+          type="button"
+          // onClick={() => {
+          //   setState([...state, []]);
+          // }}
+          style={{
+            fontSize: "150%",
+            width: "50%",
+            height: "70px",
+            background: "yellowgreen",
+          }}
+        >
+          All Duties
+        </button>
+        <button
+          type="button"
+          // onClick={() => {
+          //   setState([...state, getItems(1)]);
+          // }}
+          style={{
+            fontSize: "150%",
+            width: "50%",
+            height: "70px",
+            background: "yellow",
+          }}
+        >
+          Choosen Duties
+        </button>
+      </div>
       <div style={{ display: "flex", gap: "50px" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
@@ -146,7 +147,11 @@ function QuoteApp() {
                   {...provided.droppableProps}
                 >
                   {el.map((item, index) => (
-                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                    <Draggable
+                      key={item._id}
+                      draggableId={item._id}
+                      index={index}
+                    >
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
@@ -163,7 +168,7 @@ function QuoteApp() {
                               justifyContent: "space-around",
                             }}
                           >
-                            {item.content}
+                            {item.name}
                             <button
                               type="button"
                               onClick={() => {
