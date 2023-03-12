@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import styled from "styled-components";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import axios from "axios";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -132,39 +133,39 @@ const grid = 8;
 const ITEMS = [
   {
     id: uuid(),
-    content: "Text Field",
+    content: "ACTİON-1",
   },
   {
     id: uuid(),
-    content: "Email",
+    content: "ACTİON-2",
   },
   {
     id: uuid(),
-    content: "File",
+    content: "ACTİON-3",
   },
   {
     id: uuid(),
-    content: "Radio",
+    content: "ACTİON-4",
   },
   {
     id: uuid(),
-    content: "Select",
+    content: "ACTİON-5",
   },
   {
     id: uuid(),
-    content: "Checkbox",
+    content: "ACTİON-6",
   },
   {
     id: uuid(),
-    content: "Button",
+    content: "ACTİON-7",
   },
   {
     id: uuid(),
-    content: "Number",
+    content: "ACTİON-8",
   },
   {
     id: uuid(),
-    content: "Textarea",
+    content: "ACTİON-9",
   },
 ];
 
@@ -172,7 +173,25 @@ const App = (props) => {
   const [state, setState] = useState({
     [uuid()]: [],
   });
-
+  // const [ITEMS, setITEMS] = useState([]);
+  useEffect(() => {
+    // getTasks();
+  }, []);
+  //!get image as a ..... from API
+  function getTasks() {
+    axios
+      .get("http://127.0.0.1:5050/api/v1/ros/actions")
+      .then((res) => {
+        // abc = res.data.data.Actions;
+        // console.log(abc);
+        setState(res.data.data.Actions);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  //-------------------------------------------------------
+  console.log(ITEMS);
   const onDragEnd = (result) => {
     const { source, destination } = result;
 
@@ -220,9 +239,17 @@ const App = (props) => {
   const addList = () => {
     setState((prevState) => ({ ...prevState, [uuid()]: [] }));
   };
-
+  console.log(ITEMS);
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
+  // const handleDelete = (index) => {
+  //   console.log(Object.keys(state));
+  //   const newState = [...state];
+  //   console.log(newState);
+  //   console.log(newState.splice(index, 1));
+  //   console.log(newState);
+  //   setState(newState);
+  // };
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="ITEMS" isDropDisabled={true}>
@@ -283,15 +310,43 @@ const App = (props) => {
                             isDragging={snapshot.isDragging}
                             style={provided.draggableProps.style}
                           >
-                            <Handle {...provided.dragHandleProps}>
-                              <svg width="24" height="24" viewBox="0 0 24 24">
-                                <path
-                                  fill="currentColor"
-                                  d="M3,15H21V13H3V15M3,19H21V17H3V19M3,11H21V9H3V11M3,5V7H21V5H3Z"
-                                />
-                              </svg>
-                            </Handle>
-                            {item.content}
+                            <div
+                              style={{
+                                display: "flex",
+                                gap:"250px",
+                                justifyContent: "flex-end",
+                              }}
+                            >
+                              <div style={{ display: "flex" }}>
+                                <Handle {...provided.dragHandleProps}>
+                                  <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      fill="currentColor"
+                                      d="M3,15H21V13H3V15M3,19H21V17H3V19M3,11H21V9H3V11M3,5V7H21V5H3Z"
+                                    />
+                                  </svg>
+                                </Handle>
+                                <div>{item.content}</div>
+                              </div>
+                              <div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newState = [...state[List]];
+                                    console.log(newState);
+                                    console.log(newState.splice(index, 1));
+                                    console.log(newState);
+                                    setState(newState);
+                                  }}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
                           </Item>
                         )}
                       </Draggable>

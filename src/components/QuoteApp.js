@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
+import { v4 as uuid } from "uuid";
+
 
 const getItems = (count, offset = 0) =>
   Array.from({ length: count }, (v, k) => k).map((k) => ({
@@ -15,7 +17,16 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result;
 };
+//?--------------
+const copy = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const item = sourceClone[droppableSource.index];
 
+  destClone.splice(droppableDestination.index, 0, { ...item, id: item._id });
+  return destClone;
+};
+//?------------------------------
 /**
  * Moves an item from one list to another list.
  */
@@ -32,6 +43,8 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
   return result;
 };
+
+
 const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
@@ -77,6 +90,7 @@ function QuoteApp() {
       setState(newState);
     } else {
       const result = move(
+        state,
         state[sInd],
         state[dInd],
         source,
@@ -103,7 +117,7 @@ function QuoteApp() {
       });
   }
   //-------------------------------------------------------
-  console.log(state);
+  console.log(state);    
   return (
     <div>
       <div style={{ display: "flex", gap: "55px" }}>
