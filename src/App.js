@@ -2,14 +2,18 @@
 import "./App.css";
 // import QuoteApp from "./components/QuoteApp";
 // import  DragAndDrop from "./components/DragDrop"
-import WithCopy from "./components/WithCopy";
+// import WithCopy from "./components/WithCopy";
+import DragDropAmmarB from "./components/DragDropAmmarB";
+// import Different from "./components/different/Different";
 
 function App() {
   return (
     <div className="App">
       {/* <DragAndDrop /> */}
       {/* <QuoteApp /> */}
-      <WithCopy/>
+      {/* <WithCopy/> */}
+      <DragDropAmmarB/>
+      {/* <Different /> */}
     </div>
   );
 }

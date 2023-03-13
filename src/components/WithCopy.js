@@ -169,13 +169,15 @@ const ITEMS = [
   },
 ];
 
+const uid = uuid();
+
 const App = (props) => {
   const [state, setState] = useState({
-    [uuid()]: [],
+    [uid]: [],
   });
-  // const [ITEMS, setITEMS] = useState([]);
+  const [data, setData] = useState([]);
   useEffect(() => {
-    // getTasks();
+    getTasks();
   }, []);
   //!get image as a ..... from API
   function getTasks() {
@@ -184,17 +186,17 @@ const App = (props) => {
       .then((res) => {
         // abc = res.data.data.Actions;
         // console.log(abc);
-        setState(res.data.data.Actions);
+        console.log(res.data.data.Actions);
+        setData(res.data.data.Actions);
       })
       .catch((err) => {
         console.log(err);
       });
   }
   //-------------------------------------------------------
-  console.log(ITEMS);
   const onDragEnd = (result) => {
     const { source, destination } = result;
-
+    console.log(result);
     // dropped outside the list
     if (!destination) {
       return;
@@ -215,7 +217,7 @@ const App = (props) => {
         setState((prevState) => ({
           ...prevState,
           [destination.droppableId]: copy(
-            ITEMS,
+            data,
             prevState[destination.droppableId],
             source,
             destination
@@ -239,7 +241,6 @@ const App = (props) => {
   const addList = () => {
     setState((prevState) => ({ ...prevState, [uuid()]: [] }));
   };
-  console.log(ITEMS);
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
   // const handleDelete = (index) => {
@@ -258,8 +259,8 @@ const App = (props) => {
             ref={provided.innerRef}
             isDraggingOver={snapshot.isDraggingOver}
           >
-            {ITEMS.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
+            {data.map((item, index) => (
+              <Draggable key={item._id} draggableId={item._id} index={index}>
                 {(provided, snapshot) => (
                   <React.Fragment>
                     <Item
@@ -269,9 +270,9 @@ const App = (props) => {
                       isDragging={snapshot.isDragging}
                       style={provided.draggableProps.style}
                     >
-                      {item.content}
+                      {item.name}
                     </Item>
-                    {snapshot.isDragging && <Clone>{item.content}</Clone>}
+                    {snapshot.isDragging && <Clone>{item.name}</Clone>}
                   </React.Fragment>
                 )}
               </Draggable>
@@ -289,6 +290,7 @@ const App = (props) => {
           </svg>
           <ButtonText>Add List</ButtonText>
         </Button>
+        
         {Object.keys(state).map((list, i) => (
           <Droppable key={list} droppableId={list}>
             {(provided, snapshot) => (
@@ -296,11 +298,11 @@ const App = (props) => {
                 ref={provided.innerRef}
                 isDraggingOver={snapshot.isDraggingOver}
               >
-                {state[list].length
+                {state.length
                   ? state[list].map((item, index) => (
                       <Draggable
-                        key={item.id}
-                        draggableId={item.id}
+                        key={item._id}
+                        draggableId={item._id}
                         index={index}
                       >
                         {(provided, snapshot) => (
@@ -313,7 +315,7 @@ const App = (props) => {
                             <div
                               style={{
                                 display: "flex",
-                                gap:"250px",
+                                gap: "250px",
                                 justifyContent: "flex-end",
                               }}
                             >
@@ -330,17 +332,22 @@ const App = (props) => {
                                     />
                                   </svg>
                                 </Handle>
-                                <div>{item.content}</div>
+                                <div>{item.name}</div>
                               </div>
+
                               <div>
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    const newState = [...state[List]];
-                                    console.log(newState);
-                                    console.log(newState.splice(index, 1));
-                                    console.log(newState);
-                                    setState(newState);
+                                    console.log(state);
+                                    var newList = [...state[list]];
+                                    console.log(newList);
+                                    console.log(item, index);
+                                    newList.splice(index, 1);
+                                    console.log(newList);
+                                    setState({
+                                      uid: newList,
+                                    });
                                   }}
                                 >
                                   Delete
